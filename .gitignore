@@ -15,6 +15,9 @@
 # Visual Studio Code
 .vscode/
 
+# Arduino Build
+.build/
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
