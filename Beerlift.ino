@@ -1,9 +1,10 @@
 // Pins
-#define S1 0
+#define S1 6
 #define S_TOP 2
 #define S_BOT 3
 #define RELAIS_UP 4
 #define RELAIS_DOWN 5
+#define LED 13
 
 // Flags
 bool IsMotorRunningUp = false;
@@ -17,8 +18,12 @@ void setup() {
   pinMode(S_TOP, INPUT_PULLUP);
   pinMode(S_BOT, INPUT_PULLUP);
 
+  // Debug LED
+  pinMode(LED, OUTPUT);
+  digitalWrite(LED, LOW);
+
   // Attach interrupts
-  attachInterrupt(digitalPinToInterrupt(S1), BeerButtonPressed, FALLING);
+  //attachInterrupt(digitalPinToInterrupt(S1), BeerButtonPressed, FALLING);
   attachInterrupt(digitalPinToInterrupt(S_TOP), BeerReachedTheTop, FALLING);
   attachInterrupt(digitalPinToInterrupt(S_BOT), BeerHitRockBottom, FALLING);
 
@@ -31,6 +36,15 @@ void setup() {
 }
 
 void loop() {
+  // Check S1
+  if (digitalRead(S1) == LOW) {
+    digitalWrite(LED, HIGH);
+    BeerButtonPressed();
+  }
+  else {
+    digitalWrite(LED, LOW);
+  }
+
   // Don't search the beer when motor is running
   if (IsMotorRunning()) {
     return;
@@ -38,7 +52,6 @@ void loop() {
 
   // Check position every 3 seconds and send it back down if position is unknown
   WhereIsTheBeer();
-  delay(3000);
 }
 
 void BeerButtonPressed() {
